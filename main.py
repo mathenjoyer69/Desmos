@@ -10,6 +10,8 @@ class MainScreen:
         self.running = True
         self.clock = pygame.time.Clock()
         self.entry = Entry(20, 20, 200, 40)
+        self.entry2 = Entry(20, 80, 200, 40)
+        self.entries = [self.entry, self.entry2]
 
         self.offset = [0, 0]
         self.dragging = False
@@ -40,15 +42,19 @@ class MainScreen:
                         self.offset[1] += dy
                         self.last_mouse_pos = (mouse_x, mouse_y)
 
-                self.entry.handle_event(event)
+                for entry in self.entries:
+                    entry.handle_event(event)
 
             self.screen.fill((255, 255, 255))
             self.draw()
-            try:
-                self.draw_function(self.entry.get_text())
-            except (SyntaxError, NameError, TypeError, AttributeError, IndexError):
-                print("invalid")
-            self.entry.draw_entry(self.screen)
+            for entry in self.entries:
+                try:
+                    self.draw_function(entry.get_text())
+                except (SyntaxError, NameError, TypeError, AttributeError, IndexError):
+                    #print("invalid")
+                    pass
+            for entry in self.entries:
+                entry.draw_entry(self.screen)
             pygame.display.flip()
             self.clock.tick(60)
 
