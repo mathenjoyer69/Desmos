@@ -1,4 +1,7 @@
 from math import *
+
+import pygame.draw
+
 from classes import *
 
 pygame.init()
@@ -52,39 +55,33 @@ class MainScreen:
         endpos = (screen_width//2, screen_height)
         pygame.draw.line(self.screen, "black", startpos, endpos)
 
-    def draw_function(self,func):
+    def draw_function(self, func_input):
         center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
-        scale_factor = 15
+        scale_factor = 10
         points = []
-        func = func.split(":")
-        if len(func) > 1:
-            function, scale_factor = func[0], eval(func[1])
-        else:
-            function = func[0]
-        for i in range(-100, 100, 1):
-            x = i
-            function = function.replace('x',str(x))
-            y = eval(function)
-            function = function.replace(str(x),'x')
+
+        parts = func_input.split(":")
+        function = parts[0]
+        if len(parts) > 1:
+            try:
+                scale_factor = float(parts[1])
+            except ValueError:
+                pass
+
+        for i in range(-1000, 1000, 1):
+            x = i / 10
+            temp_function = function.replace('x', str(x))
+            y = eval(temp_function)
             screen_x = center[0] + x * scale_factor
             screen_y = center[1] - y * scale_factor
-
             points.append((screen_x, screen_y))
+
+        #for point in points:
+        #    pygame.draw.circle(self.screen, "black", point, 1)
         for i in range(len(points)-1):
-            pygame.draw.line(self.screen, "red", points[i],points[i+1])
+            pygame.draw.line(self.screen, "red", points[i], points[i + 1])
 
 
 if __name__ == '__main__':
     main = MainScreen()
     main.run()
-    str1 = "x/2"
-    func = str1.split(":")
-    if len(func) > 1:
-        function, scale_factor = func[0], eval(func[1])
-    else:
-        function = func[0]
-    x = 20
-    function = function.replace('x', str(x))
-    y = eval(function)
-    function = function.replace(str(x), 'x')
-    print(function)
