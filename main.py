@@ -11,12 +11,34 @@ class MainScreen:
         self.clock = pygame.time.Clock()
         self.entry = Entry(20, 20, 200, 40)
 
+        self.offset = [0, 0]
+        self.dragging = False
+        self.last_mouse_pos = (0, 0)
+
     def run(self):
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                     pygame.quit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 3:
+                        self.dragging = True
+                        self.last_mouse_pos = pygame.mouse.get_pos()
+
+                elif event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 3:
+                        self.dragging = False
+
+                elif event.type == pygame.MOUSEMOTION:
+                    if self.dragging:
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        dx = mouse_x - self.last_mouse_pos[0]
+                        dy = mouse_y - self.last_mouse_pos[1]
+                        self.offset[0] += dx
+                        self.offset[1] += dy
+                        self.last_mouse_pos = (mouse_x, mouse_y)
 
                 self.entry.handle_event(event)
 
@@ -33,27 +55,28 @@ class MainScreen:
     def draw(self):
         screen_width = self.screen.get_width()
         screen_height = self.screen.get_height()
+        ox, oy = self.offset
         #horizonal lines
-        for i in range(self.screen.get_height()//100):
-            startpos = (0, i*100)
-            endpos = (screen_width, i*100)
+        for i in range(0, screen_height, 100):
+            startpos = (0, i + oy % 100)
+            endpos = (screen_width, i + oy % 100)
             pygame.draw.line(self.screen, "gray", startpos, endpos)
         #vertical lines
-        for i in range(screen_width//100):
-            startpos = (i*100, 0)
-            endpos = (i*100, screen_width)
+        for i in range(0, screen_width, 100):
+            startpos = (i + ox % 100, 0)
+            endpos = (i + ox % 100, screen_width)
             pygame.draw.line(self.screen, "gray", startpos, endpos)
         #vertical line
-        start_pos = (0, screen_height//2)
-        end_pos = (screen_width, screen_height//2)
+        start_pos = (0, screen_height // 2 + oy)
+        end_pos = (screen_width, screen_height // 2 + oy)
         pygame.draw.line(self.screen,"black", start_pos, end_pos)
         #horizontal line
-        startpos = (screen_width//2, 0)
-        endpos = (screen_width//2, screen_height)
+        startpos = (screen_width // 2 + ox, 0)
+        endpos = (screen_width // 2 + ox, screen_height)
         pygame.draw.line(self.screen, "black", startpos, endpos)
 
     def draw_function(self, func_input):
-        center = (self.screen.get_width() // 2, self.screen.get_height() // 2)
+        center = (self.screen.get_width() // 2 + self.offset[0], self.screen.get_height() // 2 + self.offset[1])
         scale_factor = 10
         points = []
 
@@ -73,10 +96,10 @@ class MainScreen:
             screen_y = center[1] - y * scale_factor
             points.append((screen_x, screen_y))
 
-        #for point in points:
-        #    pygame.draw.circle(self.screen, "black", point, 1)
-        for i in range(len(points)-1):
-            pygame.draw.line(self.screen, "red", points[i], points[i + 1])
+        for point in points:
+            pygame.draw.circle(self.screen, "red", point, 1)
+        #for i in range(len(points)-1):
+        #    pygame.draw.line(self.screen, "black", points[i], points[i + 1])
 
 
 if __name__ == '__main__':
