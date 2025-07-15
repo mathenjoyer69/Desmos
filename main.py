@@ -1,7 +1,4 @@
 from math import *
-
-import pygame.draw
-
 from classes import *
 
 pygame.init()
@@ -70,7 +67,7 @@ class MainScreen:
 
         for i in range(-1000, 1000, 1):
             x = i / 10
-            temp_function = function.replace('x', str(x))
+            temp_function = function.replace('x', f'({x})')
             y = eval(temp_function)
             screen_x = center[0] + x * scale_factor
             screen_y = center[1] - y * scale_factor
