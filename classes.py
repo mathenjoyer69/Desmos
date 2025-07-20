@@ -16,10 +16,10 @@ class Entry:
 
     def draw_entry(self, surface):
         color = self.active_color if self.active else self.base_color
-        pygame.draw.rect(surface, color, self.entry_rect, border_radius=10)
+        pygame.draw.rect(surface, color, self.entry_rect)
         txt_surface = self.font.render(self.text, True, self.text_color)
         surface.blit(txt_surface, (self.entry_rect.x + 10, self.entry_rect.y + 10))
-        pygame.draw.rect(surface, 'black', self.entry_rect, 2, border_radius=10)
+        pygame.draw.rect(surface, 'black', self.entry_rect, 2)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:

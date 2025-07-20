@@ -1,4 +1,7 @@
 from math import *
+
+import pygame
+
 from classes import *
 
 pygame.init()
@@ -29,11 +32,11 @@ class MainScreen:
                         self.dragging = True
                         self.last_mouse_pos = pygame.mouse.get_pos()
 
-                elif event.type == pygame.MOUSEBUTTONUP:
+                if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 3:
                         self.dragging = False
 
-                elif event.type == pygame.MOUSEMOTION:
+                if event.type == pygame.MOUSEMOTION:
                     if self.dragging:
                         mouse_x, mouse_y = pygame.mouse.get_pos()
                         dx = mouse_x - self.last_mouse_pos[0]
@@ -70,15 +73,15 @@ class MainScreen:
         #vertical lines
         for i in range(0, screen_width, 100):
             startpos = (i + ox % 100, 0)
-            endpos = (i + ox % 100, screen_width)
+            endpos = (i + ox % 100, screen_height)
             pygame.draw.line(self.screen, "gray", startpos, endpos)
         #vertical line
-        start_pos = (0, screen_height // 2 + oy)
-        end_pos = (screen_width, screen_height // 2 + oy)
+        start_pos = (screen_width//2 + ox, 0)
+        end_pos = (screen_width//2 + ox, screen_height)
         pygame.draw.line(self.screen,"black", start_pos, end_pos)
         #horizontal line
-        startpos = (screen_width // 2 + ox, 0)
-        endpos = (screen_width // 2 + ox, screen_height)
+        startpos = (0, screen_height//2 + oy)
+        endpos = (screen_width, screen_height//2 + oy)
         pygame.draw.line(self.screen, "black", startpos, endpos)
 
     def draw_function(self, func_input):
@@ -86,7 +89,7 @@ class MainScreen:
         scale_factor = 10
         points = []
 
-        parts = func_input.split(":")
+        parts = func_input.split(":")#':' separates the function from the scaling factor
         function = parts[0]
         if len(parts) > 1:
             try:
