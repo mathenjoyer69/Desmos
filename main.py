@@ -1,7 +1,5 @@
 from math import *
-
 import pygame
-
 from classes import *
 
 pygame.init()
@@ -53,7 +51,7 @@ class MainScreen:
             for entry in self.entries:
                 try:
                     self.draw_function(entry.get_text())
-                except (SyntaxError, NameError, TypeError, AttributeError, IndexError):
+                except (SyntaxError, NameError, TypeError, AttributeError, IndexError, OverflowError):
                     #print("invalid")
                     pass
             for entry in self.entries:
@@ -99,16 +97,16 @@ class MainScreen:
 
         for i in range(-1000, 1000, 1):
             x = i / 10
-            temp_function = function.replace('x', f'({x})')
+            temp_function = function.replace('X', f'({x})')
             y = eval(temp_function)
             screen_x = center[0] + x * scale_factor
             screen_y = center[1] - y * scale_factor
             points.append((screen_x, screen_y))
 
-        for point in points:
-            pygame.draw.circle(self.screen, "red", point, 1)
-        #for i in range(len(points)-1):
-        #    pygame.draw.line(self.screen, "black", points[i], points[i + 1])
+        #for point in points:
+        #    pygame.draw.circle(self.screen, "red", point, 1)
+        for i in range(len(points)-1):
+            pygame.draw.line(self.screen, "red", points[i], points[i + 1])
 
 
 if __name__ == '__main__':
